@@ -97,3 +97,4 @@ const Data = styled(CountUp)`
 `;
 
 export default TeacherHomePage
+

@@ -16,11 +16,7 @@ const TeacherDetails = () => {
         dispatch(getTeacherDetails(teacherID));
     }, [dispatch, teacherID]);
 
-    if (error) {
-        console.log(error);
-    }
-
-    const isSubjectNamePresent = teacherDetails?.teachSubject?.subName;
+    if (error) console.log(error);
 
     const handleAddSubject = () => {
         navigate(`/Admin/teachers/choosesubject/${teacherDetails?.teachSclass?._id}/${teacherDetails?._id}`);
@@ -35,26 +31,49 @@ const TeacherDetails = () => {
                     <Typography variant="h4" align="center" gutterBottom>
                         Teacher Details
                     </Typography>
+
                     <Typography variant="h6" gutterBottom>
                         Teacher Name: {teacherDetails?.name}
                     </Typography>
+
+                    {/* ⭐ MULTIPLE CLASS DISPLAY */}
                     <Typography variant="h6" gutterBottom>
-                        Class Name: {teacherDetails?.teachSclass?.sclassName}
+                        Classes:
                     </Typography>
-                    {isSubjectNamePresent ? (
-                        <>
-                            <Typography variant="h6" gutterBottom>
-                                Subject Name: {teacherDetails?.teachSubject?.subName}
+                    {teacherDetails?.teachClasses?.length > 0 ? (
+                        teacherDetails.teachClasses.map((cls, idx) => (
+                            <Typography key={idx} sx={{ ml: 2 }}>
+                                • {cls.sclassName}
                             </Typography>
-                            <Typography variant="h6" gutterBottom>
-                                Subject Sessions: {teacherDetails?.teachSubject?.sessions}
+                        ))
+                    ) : (
+                        <Typography>No classes assigned.</Typography>
+                    )}
+
+                    {/* ⭐ MULTIPLE SUBJECT DISPLAY */}
+                    <Typography variant="h6" gutterBottom mt={2}>
+                        Subjects:
+                    </Typography>
+                    {teacherDetails?.teachSubjects?.length > 0 ? (
+                        teacherDetails.teachSubjects.map((subj, idx) => (
+                            <Typography key={idx} sx={{ ml: 2 }}>
+                                • {subj.subName} — {subj.sessions} sessions
                             </Typography>
-                        </>
+                        ))
                     ) : (
                         <Button variant="contained" onClick={handleAddSubject}>
                             Add Subject
                         </Button>
                     )}
+
+                    <Typography mt={3}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate(`/Admin/teachers/chooseclass/${teacherDetails?._id}`)}
+                        >
+                            Assign Another Class
+                        </Button>
+                    </Typography>
                 </Container>
             )}
         </>
